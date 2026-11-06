@@ -1,4 +1,7 @@
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
+import { JsonAgentRepository } from '../../infrastructure/shift/json-agent.repository.js'
+import { JsonAssignmentRepository } from '../../infrastructure/shift/json-assignment.repository.js'
+import { JsonShiftRepository } from '../../infrastructure/shift/json-shift.repository.js'
 import { availableAgents } from './availability.js'
 import type { Agent } from './models/agent.model.js'
 import type { AgentRepository, AssignmentRepository, ShiftRepository } from './ports.js'
@@ -22,9 +25,9 @@ import { ShiftNotFoundError } from './shift-not-found.error.js'
 @Injectable()
 export class ShiftAvailabilityService {
     constructor(
-        private readonly shiftRepository: ShiftRepository,
-        private readonly agentRepository: AgentRepository,
-        private readonly assignmentRepository: AssignmentRepository,
+        @Inject(JsonShiftRepository) private readonly shiftRepository: ShiftRepository,
+        @Inject(JsonAgentRepository) private readonly agentRepository: AgentRepository,
+        @Inject(JsonAssignmentRepository) private readonly assignmentRepository: AssignmentRepository,
     ) {}
 
     async listAvailableAgents(shiftId: string): Promise<Agent[]> {
