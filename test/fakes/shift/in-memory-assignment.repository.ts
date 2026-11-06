@@ -1,5 +1,5 @@
-import type { Assignment } from '../../domain/shift/models/assignment.model'
-import type { AssignmentRepository } from '../../domain/shift/ports'
+import type { Assignment } from '../../../src/domain/shift/models/assignment.model'
+import type { AssignmentRepository } from '../../../src/domain/shift/ports'
 
 /**
  * In-memory implementation of `AssignmentRepository`, backed by a fixed list.
