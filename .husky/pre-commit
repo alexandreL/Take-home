@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+
+echo "▸ Checking lint and formatting"
+pnpm check
+
+echo "▸ Building"
+pnpm build
+
+echo "▸ Running unit tests"
+pnpm test
+
+echo "▸ Running end-to-end tests"
+pnpm test:e2e
