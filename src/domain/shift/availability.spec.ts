@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import type { Agent, Assignment, Qualification, Shift } from './availability.js'
 import { availableAgents, isDoubleBooked, meetsRequirements, qualificationValidOn } from './availability.js'
+import type { Agent } from './models/agent.model.js'
+import type { Assignment } from './models/assignment.model.js'
+import type { Qualification } from './models/qualification.model.js'
+import type { Shift } from './models/shift.model.js'
 
 describe('qualificationValidOn', () => {
     function qualification(expiresOn: string): Qualification {

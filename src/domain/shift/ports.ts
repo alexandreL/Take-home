@@ -1,4 +1,6 @@
-import type { Agent, Assignment, Shift } from './availability.js'
+import type { Agent } from './models/agent.model.js'
+import type { Assignment } from './models/assignment.model.js'
+import type { Shift } from './models/shift.model.js'
 
 /**
  * Read ports used by the availability service. Declared in the domain, implemented

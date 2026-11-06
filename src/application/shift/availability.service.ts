@@ -1,6 +1,6 @@
 // biome-ignore-all lint/correctness/noUnusedFunctionParameters lint/correctness/noUnusedPrivateClassMembers: prototype, implemented with its tests
 import { Injectable } from '@nestjs/common'
-import type { Agent } from '../../domain/shift/availability.js'
+import type { Agent } from '../../domain/shift/models/agent.model.js'
 import type { AgentRepository, AssignmentRepository, ShiftRepository } from '../../domain/shift/ports.js'
 
 /**
