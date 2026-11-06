@@ -95,42 +95,38 @@ describe('meetsRequirements', () => {
         expect(meetsRequirements(agent([qualification('GUARD_LICENSE', '2026-09-14')]), shift(['GUARD_LICENSE']))).toBe(false)
     })
 
-    it('should not meet a shift when the required qualification expires partway through the shift', () => {
-        expect(meetsRequirements(agent([qualification('GUARD_LICENSE', '2026-09-15')]), shift(['GUARD_LICENSE']))).toBe(false)
-    })
-
     it('should not meet a shift when only one of several required qualifications is expired', () => {
-        const expiredCrowdControl = qualification('CROWD_CONTROL', '2026-09-15')
+        const expiredCrowdControl = qualification('CROWD_CONTROL', '2026-09-14')
         expect(meetsRequirements(agent([validGuard, expiredCrowdControl]), shift(['GUARD_LICENSE', 'CROWD_CONTROL']))).toBe(false)
     })
 
-    it('should meet a shift when the qualification expires on the same UTC day the shift ends', () => {
-        expect(meetsRequirements(agent([qualification('GUARD_LICENSE', '2026-09-16')]), shift(['GUARD_LICENSE']))).toBe(true)
+    it('should meet a shift when the qualification expires on the same UTC day the shift starts', () => {
+        expect(meetsRequirements(agent([qualification('GUARD_LICENSE', '2026-09-15')]), shift(['GUARD_LICENSE']))).toBe(true)
     })
 
-    it('should meet a shift when the qualification expires exactly at the shift end instant', () => {
-        const endsAtMidnight = shift(['GUARD_LICENSE'], '2026-09-15T22:00:00Z', '2026-09-17T00:00:00Z')
-        expect(meetsRequirements(agent([qualification('GUARD_LICENSE', '2026-09-16')]), endsAtMidnight)).toBe(true)
+    it('should not meet a shift when the qualification expired the day before the shift starts', () => {
+        expect(meetsRequirements(agent([qualification('GUARD_LICENSE', '2026-09-14')]), shift(['GUARD_LICENSE']))).toBe(false)
     })
 
-    it('should meet a shift when the qualification expires after the shift ends', () => {
-        expect(meetsRequirements(agent([qualification('GUARD_LICENSE', '2026-09-17')]), shift(['GUARD_LICENSE']))).toBe(true)
-    })
-
-    it('should not meet a shift when the qualification expires exactly at the shift start instant', () => {
+    it('should not meet a shift starting at midnight when the qualification expired the previous day', () => {
         const startsAtMidnight = shift(['GUARD_LICENSE'], '2026-09-16T00:00:00Z', '2026-09-16T06:00:00Z')
         expect(meetsRequirements(agent([qualification('GUARD_LICENSE', '2026-09-15')]), startsAtMidnight)).toBe(false)
     })
 
-    it('should meet a multi-day shift only when the qualification covers its last day', () => {
-        const multiDay = shift(['GUARD_LICENSE'], '2026-09-10T22:00:00Z', '2026-09-20T06:00:00Z')
-        expect(meetsRequirements(agent([qualification('GUARD_LICENSE', '2026-09-19')]), multiDay)).toBe(false)
-        expect(meetsRequirements(agent([qualification('GUARD_LICENSE', '2026-09-20')]), multiDay)).toBe(true)
+    it('should meet a shift when the qualification expires before the shift ends', () => {
+        const longShift = shift(['GUARD_LICENSE'], '2026-09-15T22:00:00Z', '2026-09-18T06:00:00Z')
+        expect(meetsRequirements(agent([qualification('GUARD_LICENSE', '2026-09-16')]), longShift)).toBe(true)
     })
 
-    it('should evaluate validity against the shift end, not its start', () => {
+    it('should meet a multi-day shift as soon as the qualification covers its first day', () => {
+        const multiDay = shift(['GUARD_LICENSE'], '2026-09-10T22:00:00Z', '2026-09-20T06:00:00Z')
+        expect(meetsRequirements(agent([qualification('GUARD_LICENSE', '2026-09-10')]), multiDay)).toBe(true)
+        expect(meetsRequirements(agent([qualification('GUARD_LICENSE', '2026-09-09')]), multiDay)).toBe(false)
+    })
+
+    it('should evaluate validity against the shift start, not its end', () => {
         const longShift = shift(['GUARD_LICENSE'], '2026-09-15T22:00:00Z', '2026-09-18T06:00:00Z')
-        expect(meetsRequirements(agent([qualification('GUARD_LICENSE', '2026-09-16')]), longShift)).toBe(false)
+        expect(meetsRequirements(agent([qualification('GUARD_LICENSE', '2026-09-15')]), longShift)).toBe(true)
     })
 })
 

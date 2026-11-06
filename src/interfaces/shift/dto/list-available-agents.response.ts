@@ -1,8 +1,4 @@
 import type { AgentDto } from './agent.dto.js'
 
-/**
- * Response body of `GET /shifts/:shiftId/available-agents`.
- *
- * Never empty: the endpoint answers 404 when no agent is available.
- */
+/** Response body of `GET /shifts/:shiftId/available-agents`: a bare JSON array (empty, never 404). */
 export type ListAvailableAgentsResponse = AgentDto[]

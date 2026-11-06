@@ -3,8 +3,6 @@ import type { Assignment } from './models/assignment.model'
 import type { Qualification } from './models/qualification.model'
 import type { Shift } from './models/shift.model'
 
-const ONE_MILLISECOND = 1
-
 /**
  * Whether the qualification is still valid on the given calendar day.
  *
@@ -17,21 +15,17 @@ export function qualificationValidOn(qualification: Qualification, day: Date): b
 
 /**
  * Whether the agent holds every qualification the shift requires, each of them
- * still valid at the end of the shift.
+ * still valid on the shift's start day.
  *
- * A shift is inclusive of its end instant, but a qualification only covers whole
- * UTC calendar days. Stepping back by the smallest representable unit keeps the
- * two on the same footing: a qualification expiring exactly at `end` still counts.
- *
- * A shift with no requirement accepts every agent.
+ * Validity is a property of the shift start only: a qualification expiring on the
+ * start day counts, one that expired the day before does not. A shift with no
+ * requirement accepts every agent.
  */
 export function meetsRequirements(agent: Agent, shift: Shift): boolean {
-    const lastInstantOfWork = new Date(Date.parse(shift.end) - ONE_MILLISECOND)
+    const shiftStart = new Date(shift.start)
 
     return shift.requiredQualifications.every(requiredCode =>
-        agent.qualifications.some(
-            qualification => qualification.code === requiredCode && qualificationValidOn(qualification, lastInstantOfWork),
-        ),
+        agent.qualifications.some(qualification => qualification.code === requiredCode && qualificationValidOn(qualification, shiftStart)),
     )
 }
 
