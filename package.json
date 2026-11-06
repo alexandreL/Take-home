@@ -6,7 +6,7 @@
     "license": "UNLICENSED",
     "type": "commonjs",
     "engines": {
-        "node": ">=20"
+        "node": ">=22.5"
     },
     "scripts": {
         "build": "nest build",
@@ -15,6 +15,8 @@
         "check:fix": "biome check --write .",
         "check:fix:unsafe": "biome check --write --unsafe .",
         "format": "biome format --write .",
+        "seed": "node scripts/seed.js",
+        "seed:reset": "node scripts/seed.js --reset",
         "lint": "biome lint .",
         "start": "nest start",
         "start:dev": "nest start --watch",

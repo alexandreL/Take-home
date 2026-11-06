@@ -3,7 +3,9 @@ import type { INestApplication } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { AppModule } from '../src/app.module.js'
+import { AppModule } from '../src/app.module'
+import { seedDatabase } from './support/seed-database'
+import { createTempDatabase, type TempDatabase } from './support/temp-database'
 
 interface AvailableAgent {
     id: string
@@ -12,13 +14,16 @@ interface AvailableAgent {
 
 // Jordan also holds CROWD_CONTROL in the fixture, so that on shf_2 the only
 // reason to exclude him is the overlap with the shift he is booked on.
-const DATABASE_PATH = fileURLToPath(new URL('./fixtures/availability.json', import.meta.url))
+const FIXTURE = fileURLToPath(new URL('./fixtures/availability.json', import.meta.url))
 
 describe('GET /api/shifts/:shiftId/available-agents', () => {
     let app: INestApplication
+    let database: TempDatabase
 
     beforeAll(async () => {
-        process.env.DATABASE_PATH = DATABASE_PATH
+        database = createTempDatabase()
+        await seedDatabase(FIXTURE, database.path)
+        process.env.DATABASE_PATH = database.path
 
         const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile()
         app = moduleRef.createNestApplication()
@@ -28,6 +33,7 @@ describe('GET /api/shifts/:shiftId/available-agents', () => {
     afterAll(async () => {
         await app.close()
         delete process.env.DATABASE_PATH
+        database.cleanup()
     })
 
     async function getAvailableAgents(shiftId: string): Promise<AvailableAgent[]> {

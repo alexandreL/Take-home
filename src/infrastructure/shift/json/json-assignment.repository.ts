@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
-import type { Assignment } from '../../domain/shift/models/assignment.model'
-import type { AssignmentRepository, CreateAssignmentInput } from '../../domain/shift/ports'
+import type { Assignment } from '../../../domain/shift/models/assignment.model'
+import type { AssignmentRepository, CreateAssignmentInput } from '../../../domain/shift/ports'
 import { JsonDatabase } from './json-database'
 
 @Injectable()

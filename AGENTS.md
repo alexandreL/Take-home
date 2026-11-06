@@ -10,7 +10,7 @@ All code, comments, tests and documentation are written in English.
 
 ## Stack
 
-- Runtime: Node.js >= 20
+- Runtime: Node.js >= 22.5 (built-in `node:sqlite`)
 - Framework: NestJS 12 (ESM)
 - Language: TypeScript, `strict` mode
 - Package manager: pnpm
@@ -28,6 +28,8 @@ All code, comments, tests and documentation are written in English.
 | `pnpm check:fix`        | Apply safe Biome fixes                   |
 | `pnpm check:fix:unsafe` | Apply safe and unsafe Biome fixes        |
 | `pnpm format`           | Format only                              |
+| `pnpm seed`             | Load `database/data.json` into SQLite    |
+| `pnpm seed:reset`       | Empty the SQLite database, then load it  |
 
 ## Git hooks
 

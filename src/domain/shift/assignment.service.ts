@@ -1,12 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { JsonAgentRepository } from '../../infrastructure/shift/json-agent.repository'
-import { JsonAssignmentRepository } from '../../infrastructure/shift/json-assignment.repository'
-import { JsonShiftRepository } from '../../infrastructure/shift/json-shift.repository'
 import { AgentNotAvailableError } from './agent-not-available.error'
 import { AgentNotFoundError } from './agent-not-found.error'
 import { isDoubleBooked, meetsRequirements, uniqueShiftIds } from './availability'
 import type { Assignment } from './models/assignment.model'
-import type { AgentRepository, AssignmentRepository, ShiftRepository } from './ports'
+import {
+    AGENT_REPOSITORY,
+    type AgentRepository,
+    ASSIGNMENT_REPOSITORY,
+    type AssignmentRepository,
+    SHIFT_REPOSITORY,
+    type ShiftRepository,
+} from './ports'
 import { ShiftFullError } from './shift-full.error'
 import { ShiftNotFoundError } from './shift-not-found.error'
 
@@ -23,9 +27,9 @@ import { ShiftNotFoundError } from './shift-not-found.error'
 @Injectable()
 export class AssignmentService {
     constructor(
-        @Inject(JsonShiftRepository) private readonly shiftRepository: ShiftRepository,
-        @Inject(JsonAgentRepository) private readonly agentRepository: AgentRepository,
-        @Inject(JsonAssignmentRepository) private readonly assignmentRepository: AssignmentRepository,
+        @Inject(SHIFT_REPOSITORY) private readonly shiftRepository: ShiftRepository,
+        @Inject(AGENT_REPOSITORY) private readonly agentRepository: AgentRepository,
+        @Inject(ASSIGNMENT_REPOSITORY) private readonly assignmentRepository: AssignmentRepository,
     ) {}
 
     async assignAgent(shiftId: string, agentId: string): Promise<Assignment> {

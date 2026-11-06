@@ -1,19 +1,21 @@
 import { Module } from '@nestjs/common'
 import { AssignmentService } from '../../domain/shift/assignment.service'
 import { ShiftAvailabilityService } from '../../domain/shift/availability.service'
-import { JsonAgentRepository } from '../../infrastructure/shift/json-agent.repository'
-import { JsonAssignmentRepository } from '../../infrastructure/shift/json-assignment.repository'
-import { JsonDatabase } from '../../infrastructure/shift/json-database'
-import { JsonShiftRepository } from '../../infrastructure/shift/json-shift.repository'
+import { AGENT_REPOSITORY, ASSIGNMENT_REPOSITORY, SHIFT_REPOSITORY } from '../../domain/shift/ports'
+import { SqliteAgentRepository } from '../../infrastructure/shift/sqlite/sqlite-agent.repository'
+import { SqliteAssignmentRepository } from '../../infrastructure/shift/sqlite/sqlite-assignment.repository'
+import { SqliteDatabase } from '../../infrastructure/shift/sqlite/sqlite-database'
+import { SqliteShiftRepository } from '../../infrastructure/shift/sqlite/sqlite-shift.repository'
 import { ShiftController } from './shift.controller'
 
 @Module({
     controllers: [ShiftController],
     providers: [
-        JsonDatabase,
-        JsonShiftRepository,
-        JsonAgentRepository,
-        JsonAssignmentRepository,
+        SqliteDatabase,
+        // This module is the only place where the ports are bound to adapters.
+        { provide: SHIFT_REPOSITORY, useClass: SqliteShiftRepository },
+        { provide: AGENT_REPOSITORY, useClass: SqliteAgentRepository },
+        { provide: ASSIGNMENT_REPOSITORY, useClass: SqliteAssignmentRepository },
         ShiftAvailabilityService,
         AssignmentService,
     ],
