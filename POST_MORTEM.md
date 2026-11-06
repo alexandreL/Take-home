@@ -16,7 +16,7 @@ Non géré. `assignAgent` lit les assignations de l'agent puis écrit, mais la
 transaction ne couvre que le nombre de places : deux requêtes simultanées pour
 le même agent sur deux shifts qui se chevauchent passent toutes les deux.
 
-L'idée serait de mettre un deadlock au niveau de l'agent : au moment d'une
+L'idée serait de mettre un mutex au niveau de l'agent : au moment d'une
 requête qui touche une édition (l'assignation d'un agent), on locke l'agent, on
 fait toutes nos étapes, nos vérifications et nos insertions, puis on le
 déloque. Ça nécessiterait de changer le data model, et honnêtement c'est
