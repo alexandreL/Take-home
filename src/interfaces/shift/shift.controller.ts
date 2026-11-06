@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseFilters } from '@nestjs/common'
+import { Controller, Get, NotFoundException, Param, UseFilters } from '@nestjs/common'
 import { ShiftAvailabilityService } from '../../domain/shift/availability.service.js'
 import { toAgentDto } from './agent.mapper.js'
 import type { ListAvailableAgentsParams } from './dto/list-available-agents.params.js'
@@ -13,6 +13,9 @@ export class ShiftController {
     @Get(':shiftId/available-agents')
     async listAvailableAgents(@Param() params: ListAvailableAgentsParams): Promise<ListAvailableAgentsResponse> {
         const agents = await this.shiftAvailabilityService.listAvailableAgents(params.shiftId)
+        if (agents.length === 0) {
+            throw new NotFoundException(`No agent is available for shift ${params.shiftId}`)
+        }
 
         return agents.map(toAgentDto)
     }

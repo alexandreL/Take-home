@@ -62,10 +62,10 @@ describe('GET /api/shifts/:shiftId/available-agents', () => {
         expect(agents.map(agent => agent.id)).not.toContain('agt_1')
     })
 
-    it('should return an empty array when nobody is available', async () => {
-        const agents = await getAvailableAgents('shf_3')
+    it('should return 404 when nobody is available', async () => {
+        const response = await request(app.getHttpServer()).get('/api/shifts/shf_3/available-agents').expect(404)
 
-        expect(agents).toEqual([])
+        expect(response.body).toMatchObject({ statusCode: 404 })
     })
 
     it('should return 404 when the shift does not exist', async () => {
