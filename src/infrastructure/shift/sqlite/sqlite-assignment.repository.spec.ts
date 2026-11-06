@@ -24,7 +24,7 @@ describe('SqliteAssignmentRepository', () => {
     it('should persist an assignment and return it with its id', async () => {
         const { repository, database, cleanup } = buildRepository()
 
-        const assignment = await repository.create({ shiftId: 'shf_1', agentId: 'agt_2' })
+        const assignment = await repository.create({ shiftId: 'shf_1', agentId: 'agt_2' }, 2)
 
         expect(assignment).toEqual({ id: 'asg_3', shiftId: 'shf_1', agentId: 'agt_2' })
         await expect(repository.findByShiftId('shf_1')).resolves.toContainEqual(assignment)
@@ -43,7 +43,7 @@ describe('SqliteAssignmentRepository', () => {
 
         const repository = new SqliteAssignmentRepository(database)
 
-        await expect(repository.create({ shiftId: 'shf_1', agentId: 'agt_1' })).resolves.toMatchObject({ id: 'asg_1' })
+        await expect(repository.create({ shiftId: 'shf_1', agentId: 'agt_1' }, 2)).resolves.toMatchObject({ id: 'asg_1' })
 
         database.close()
         cleanup()
@@ -51,7 +51,7 @@ describe('SqliteAssignmentRepository', () => {
 
     it('should keep the assignments after the database is reopened', async () => {
         const { repository, database, cleanup } = buildRepository()
-        const created = await repository.create({ shiftId: 'shf_1', agentId: 'agt_2' })
+        const created = await repository.create({ shiftId: 'shf_1', agentId: 'agt_2' }, 2)
         database.close()
 
         const reopened = new SqliteDatabase(database.databasePath)
@@ -79,6 +79,28 @@ describe('SqliteAssignmentRepository', () => {
         const assignments = await repository.findByAgentIds(['agt_1'])
 
         expect(assignments).toEqual([{ id: 'asg_1', shiftId: 'shf_1', agentId: 'agt_1' }])
+
+        database.close()
+        cleanup()
+    })
+
+    it('should return undefined when the shift has no room left', async () => {
+        const { repository, database, cleanup } = buildRepository()
+
+        // shf_2 has a headcount of 1 and already holds one assignment.
+        await expect(repository.create({ shiftId: 'shf_2', agentId: 'agt_1' }, 1)).resolves.toBeUndefined()
+
+        database.close()
+        cleanup()
+    })
+
+    it('should write nothing when the shift has no room left', async () => {
+        const { repository, database, cleanup } = buildRepository()
+        const before = await repository.findByShiftId('shf_2')
+
+        await repository.create({ shiftId: 'shf_2', agentId: 'agt_1' }, 1)
+
+        await expect(repository.findByShiftId('shf_2')).resolves.toEqual(before)
 
         database.close()
         cleanup()

@@ -44,6 +44,14 @@
             "end": "2026-09-16T03:00:00Z",
             "requiredQualifications": ["GUARD_LICENSE", "CROWD_CONTROL"],
             "headcount": 1
+        },
+        {
+            "id": "shf_3",
+            "site": "Place Ville Marie, Montreal",
+            "start": "2026-10-01T08:00:00Z",
+            "end": "2026-10-01T16:00:00Z",
+            "requiredQualifications": [],
+            "headcount": 1
         }
     ],
     "assignments": [{ "id": "asg_1", "shiftId": "shf_1", "agentId": "agt_1" }]

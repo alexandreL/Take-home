@@ -37,6 +37,9 @@ export class SqliteDatabase {
 
         const connection = new DatabaseSync(this.databasePath)
         connection.exec('PRAGMA foreign_keys = ON')
+        // Another process writing at the same time makes SQLite wait instead of
+        // failing immediately; the booking transaction then sees the committed rows.
+        connection.exec('PRAGMA busy_timeout = 5000')
         connection.exec(readFileSync(SCHEMA_PATH, 'utf8'))
 
         return connection

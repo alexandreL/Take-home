@@ -35,5 +35,13 @@ export interface CreateAssignmentInput {
 export interface AssignmentRepository {
     findByAgentIds(agentIds: string[]): Promise<Assignment[]>
     findByShiftId(shiftId: string): Promise<Assignment[]>
-    create(input: CreateAssignmentInput): Promise<Assignment>
+    /**
+     * Reserves a place on the shift.
+     *
+     * The check and the insert form one atomic step: the assignment is written
+     * only when fewer than `capacity` assignments exist for that shift, and
+     * `undefined` is returned otherwise. Two bookings racing for the last seat
+     * therefore cannot both succeed.
+     */
+    create(input: CreateAssignmentInput, capacity: number): Promise<Assignment | undefined>
 }

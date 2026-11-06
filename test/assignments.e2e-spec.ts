@@ -118,4 +118,27 @@ describe('POST /api/shifts/:shiftId/assignments', () => {
 
         expect(storedAssignments()).toEqual(afterBooking)
     })
+
+    // shf_3 has one seat, and both agents are free and qualified for it: the two
+    // requests race for the same seat.
+    //
+    // `node:sqlite` is synchronous, so in a single process these two handlers
+    // cannot interleave inside the database even when this test fails: it guards
+    // the behaviour, it does not prove the atomicity. That proof is the
+    // transaction in `SqliteAssignmentRepository.create` and its unit tests.
+    function bookLastSpot(): [request.Test, request.Test] {
+        return [createAssignment('shf_3', { agentId: 'agt_3' }), createAssignment('shf_3', { agentId: 'agt_4' })]
+    }
+
+    it('should let only one of two concurrent bookings take the last spot', async () => {
+        const responses = await Promise.all(bookLastSpot())
+
+        expect(responses.map(response => response.status).sort()).toEqual([201, 409])
+    })
+
+    it('should store exactly one assignment after two concurrent bookings', async () => {
+        await Promise.all(bookLastSpot())
+
+        expect(storedAssignments().filter(assignment => (assignment as { shift_id: string }).shift_id === 'shf_3')).toHaveLength(1)
+    })
 })

@@ -74,6 +74,15 @@ The adapters live in `src/infrastructure/shift/`:
 
 Point `DATABASE_PATH` at another file to use a different database.
 
+A booking is atomic: `SqliteAssignmentRepository.create` counts the assignments
+of the shift and inserts the new one inside a single `BEGIN IMMEDIATE`
+transaction, and returns `undefined` instead of inserting when the headcount is
+already reached. Two requests racing for the last seat cannot both win, even
+across processes (`busy_timeout` makes the second writer wait instead of
+failing).
+
+## Tooling
+
 - **Biome** handles both linting and formatting.
 - **Vitest** runs unit tests; **Supertest** drives the end-to-end tests.
 

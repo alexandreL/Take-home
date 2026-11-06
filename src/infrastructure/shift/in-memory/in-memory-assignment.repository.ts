@@ -18,7 +18,12 @@ export class InMemoryAssignmentRepository implements AssignmentRepository {
         return this.assignments.filter(assignment => assignment.shiftId === shiftId)
     }
 
-    async create(input: CreateAssignmentInput): Promise<Assignment> {
+    async create(input: CreateAssignmentInput, capacity: number): Promise<Assignment | undefined> {
+        const used = this.assignments.filter(assignment => assignment.shiftId === input.shiftId).length
+        if (used >= capacity) {
+            return undefined
+        }
+
         this.created.push(input)
         const assignment: Assignment = { id: `asg_${this.assignments.length + 1}`, ...input }
         this.assignments.push(assignment)

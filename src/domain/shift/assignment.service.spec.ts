@@ -9,6 +9,7 @@ import type { Agent } from './models/agent.model'
 import type { Assignment } from './models/assignment.model'
 import type { Qualification } from './models/qualification.model'
 import type { Shift } from './models/shift.model'
+import type { AssignmentRepository } from './ports'
 import { ShiftFullError } from './shift-full.error'
 import { ShiftNotFoundError } from './shift-not-found.error'
 
@@ -44,9 +45,11 @@ function buildService(
     agents: Agent[],
     assignments: Assignment[] = [],
     availableShifts: Shift[] = shifts,
+    assignmentRepository?: AssignmentRepository,
 ): { service: AssignmentService; repository: InMemoryAssignmentRepository } {
     const repository = new InMemoryAssignmentRepository(assignments)
-    const service = new AssignmentService(new InMemoryShiftRepository(availableShifts), new InMemoryAgentRepository(agents), repository)
+    const used = assignmentRepository ?? repository
+    const service = new AssignmentService(new InMemoryShiftRepository(availableShifts), new InMemoryAgentRepository(agents), used)
 
     return { service, repository }
 }
@@ -120,6 +123,19 @@ describe('AssignmentService', () => {
         const { service } = buildService([agent('agt_4', [])], [], [openShift])
 
         await expect(service.assignAgent('shf_3', 'agt_4')).resolves.toMatchObject({ shiftId: 'shf_3', agentId: 'agt_4' })
+    })
+
+    it('should reject when the shift fills up between the check and the write', async () => {
+        // The pre-check sees a free seat; by the time the atomic write runs,
+        // another booking has taken it.
+        const losingWrite: AssignmentRepository = {
+            findByAgentIds: async () => [],
+            findByShiftId: async () => [],
+            create: async () => undefined,
+        }
+        const { service } = buildService([agent('agt_1', [validGuard])], [], shifts, losingWrite)
+
+        await expect(service.assignAgent('shf_1', 'agt_1')).rejects.toBeInstanceOf(ShiftFullError)
     })
 
     it('should not persist any assignment when the request is rejected', async () => {

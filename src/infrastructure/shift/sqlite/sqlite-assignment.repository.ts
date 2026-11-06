@@ -38,14 +38,26 @@ export class SqliteAssignmentRepository implements AssignmentRepository {
         return rows.map(toAssignment)
     }
 
-    async create(input: CreateAssignmentInput): Promise<Assignment> {
+    async create(input: CreateAssignmentInput, capacity: number): Promise<Assignment | undefined> {
         const connection = this.database.connection
 
-        // The read of the current highest id and the insert must not interleave
-        // with another booking.
+        // The count and the insert must form a single step: as two separate
+        // queries, two bookings could both read the same count and both insert.
+        // IMMEDIATE takes the write lock up front, so no other writer can slip in
+        // between the SELECT and the INSERT.
         connection.exec('BEGIN IMMEDIATE')
 
         try {
+            const { count } = connection.prepare('SELECT COUNT(*) AS count FROM assignments WHERE shift_id = ?').get(input.shiftId) as {
+                count: number
+            }
+
+            if (count >= capacity) {
+                connection.exec('COMMIT')
+
+                return undefined
+            }
+
             const row = connection.prepare('SELECT COALESCE(MAX(CAST(SUBSTR(id, 5) AS INTEGER)), 0) AS highest FROM assignments').get() as {
                 highest: number
             }

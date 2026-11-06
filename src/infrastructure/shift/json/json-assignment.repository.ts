@@ -19,8 +19,13 @@ export class JsonAssignmentRepository implements AssignmentRepository {
         return assignments.filter(assignment => assignment.shiftId === shiftId)
     }
 
-    async create(input: CreateAssignmentInput): Promise<Assignment> {
+    async create(input: CreateAssignmentInput, capacity: number): Promise<Assignment | undefined> {
         return this.database.update(snapshot => {
+            const used = snapshot.assignments.filter(assignment => assignment.shiftId === input.shiftId).length
+            if (used >= capacity) {
+                return undefined
+            }
+
             const assignment: Assignment = {
                 id: nextAssignmentId(snapshot.assignments),
                 shiftId: input.shiftId,

@@ -58,6 +58,13 @@ export class AssignmentService {
             throw new AgentNotAvailableError(shiftId, agentId, 'double-booked')
         }
 
-        return this.assignmentRepository.create({ shiftId, agentId })
+        // The check above answers 409 before the availability rules; this call is
+        // what actually enforces the limit, atomically.
+        const assignment = await this.assignmentRepository.create({ shiftId, agentId }, shift.headcount)
+        if (assignment === undefined) {
+            throw new ShiftFullError(shiftId)
+        }
+
+        return assignment
     }
 }
