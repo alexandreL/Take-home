@@ -1,5 +1,5 @@
+import type { AssignmentRepository, CreateAssignmentInput } from '../../../application/shift/ports'
 import type { Assignment } from '../../../domain/shift/models/assignment.model'
-import type { AssignmentRepository, CreateAssignmentInput } from '../../../domain/shift/ports'
 
 /**
  * In-memory implementation of `AssignmentRepository`, backed by a fixed list.

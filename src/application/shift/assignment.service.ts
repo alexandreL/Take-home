@@ -1,8 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { AgentNotAvailableError } from './agent-not-available.error'
-import { AgentNotFoundError } from './agent-not-found.error'
-import { isDoubleBooked, meetsRequirements, uniqueShiftIds } from './availability'
-import type { Assignment } from './models/assignment.model'
+import { AgentNotAvailableError } from '../../domain/shift/agent-not-available.error'
+import { AgentNotFoundError } from '../../domain/shift/agent-not-found.error'
+import { isDoubleBooked, meetsRequirements, uniqueShiftIds } from '../../domain/shift/availability'
+import type { Assignment } from '../../domain/shift/models/assignment.model'
+import { ShiftFullError } from '../../domain/shift/shift-full.error'
+import { ShiftNotFoundError } from '../../domain/shift/shift-not-found.error'
 import {
     AGENT_REPOSITORY,
     type AgentRepository,
@@ -11,8 +13,6 @@ import {
     SHIFT_REPOSITORY,
     type ShiftRepository,
 } from './ports'
-import { ShiftFullError } from './shift-full.error'
-import { ShiftNotFoundError } from './shift-not-found.error'
 
 /**
  * Assigns an agent to a shift.

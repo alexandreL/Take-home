@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
+import type { ShiftRepository } from '../../../application/shift/ports'
 import type { Shift } from '../../../domain/shift/models/shift.model'
-import type { ShiftRepository } from '../../../domain/shift/ports'
 import { SqliteDatabase } from './sqlite-database'
 
 interface ShiftRow {

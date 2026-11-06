@@ -1,5 +1,5 @@
+import type { AgentRepository } from '../../../application/shift/ports'
 import type { Agent } from '../../../domain/shift/models/agent.model'
-import type { AgentRepository } from '../../../domain/shift/ports'
 
 /**
  * In-memory implementation of `AgentRepository`, backed by a fixed list.

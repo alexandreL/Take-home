@@ -1,5 +1,5 @@
+import type { ShiftRepository } from '../../../application/shift/ports'
 import type { Shift } from '../../../domain/shift/models/shift.model'
-import type { ShiftRepository } from '../../../domain/shift/ports'
 
 /**
  * In-memory implementation of `ShiftRepository`, backed by a fixed list.

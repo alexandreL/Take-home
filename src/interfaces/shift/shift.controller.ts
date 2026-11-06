@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, UseFilters } from '@nestjs/common'
-import { AssignmentService } from '../../domain/shift/assignment.service'
-import { ShiftAvailabilityService } from '../../domain/shift/availability.service'
+import { AssignmentService } from '../../application/shift/assignment.service'
+import { ShiftAvailabilityService } from '../../application/shift/availability.service'
 import { toAgentDto } from './agent.mapper'
 import { toAssignmentDto } from './assignment.mapper'
 import type { CreateAssignmentBody } from './dto/create-assignment.body'

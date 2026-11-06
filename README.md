@@ -39,8 +39,8 @@ listens on `http://localhost:3000` by default. Override it with `PORT`.
 
 ```
 src/
-  domain/          # entities, value objects, domain errors, ports
-  application/     # use cases, commands and results
+  domain/          # entities, value objects, domain errors
+  application/     # use cases, commands, results, ports
   infrastructure/  # adapters implementing the ports
   interfaces/      # driving adapters: HTTP controllers, DTOs, mappers
   app.module.ts    # composition root (wiring only)

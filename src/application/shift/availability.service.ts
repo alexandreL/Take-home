@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { availableAgents } from './availability'
-import type { Agent } from './models/agent.model'
+import { availableAgents } from '../../domain/shift/availability'
+import type { Agent } from '../../domain/shift/models/agent.model'
+import { ShiftNotFoundError } from '../../domain/shift/shift-not-found.error'
 import {
     AGENT_REPOSITORY,
     type AgentRepository,
@@ -9,7 +10,6 @@ import {
     SHIFT_REPOSITORY,
     type ShiftRepository,
 } from './ports'
-import { ShiftNotFoundError } from './shift-not-found.error'
 
 /**
  * Lists the agents who can work a given shift.

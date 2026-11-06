@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest'
+import type { Agent } from '../../domain/shift/models/agent.model'
+import type { Assignment } from '../../domain/shift/models/assignment.model'
+import type { Qualification } from '../../domain/shift/models/qualification.model'
+import type { Shift } from '../../domain/shift/models/shift.model'
+import { ShiftNotFoundError } from '../../domain/shift/shift-not-found.error'
 import { InMemoryAgentRepository } from '../../infrastructure/shift/in-memory/in-memory-agent.repository'
 import { InMemoryAssignmentRepository } from '../../infrastructure/shift/in-memory/in-memory-assignment.repository'
 import { InMemoryShiftRepository } from '../../infrastructure/shift/in-memory/in-memory-shift.repository'
 import { ShiftAvailabilityService } from './availability.service'
-import type { Agent } from './models/agent.model'
-import type { Assignment } from './models/assignment.model'
-import type { Qualification } from './models/qualification.model'
-import type { Shift } from './models/shift.model'
-import { ShiftNotFoundError } from './shift-not-found.error'
 
 function agent(id: string, qualifications: Qualification[]): Agent {
     return { id, name: id, qualifications }

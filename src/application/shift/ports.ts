@@ -1,6 +1,6 @@
-import type { Agent } from './models/agent.model'
-import type { Assignment } from './models/assignment.model'
-import type { Shift } from './models/shift.model'
+import type { Agent } from '../../domain/shift/models/agent.model'
+import type { Assignment } from '../../domain/shift/models/assignment.model'
+import type { Shift } from '../../domain/shift/models/shift.model'
 
 /**
  * Read and write ports used by the shift services. Declared in the domain,

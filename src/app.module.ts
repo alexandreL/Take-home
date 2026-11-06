@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { ShiftModule } from './interfaces/shift/shift.module'
+import { ShiftModule } from './shift.module'
 
 @Module({
     imports: [ShiftModule],
