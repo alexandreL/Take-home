@@ -72,6 +72,17 @@ describe('POST /api/shifts/:shiftId/assignments', () => {
         expect(response.body).toEqual([])
     })
 
+    it('should remove the booked agent from every overlapping shift', async () => {
+        const before = await request(app.getHttpServer()).get('/api/shifts/shf_1/available-agents').expect(200)
+        expect(before.body.map((agent: { id: string }) => agent.id)).toContain('agt_3')
+
+        // shf_1 runs 22:00-06:00, shf_2 runs 23:00-03:00: they overlap.
+        await createAssignment('shf_2', { agentId: 'agt_3' }).expect(201)
+
+        const after = await request(app.getHttpServer()).get('/api/shifts/shf_1/available-agents').expect(200)
+        expect(after.body.map((agent: { id: string }) => agent.id)).not.toContain('agt_3')
+    })
+
     it('should return 404 when the shift does not exist', async () => {
         await createAssignment('shf_unknown', { agentId: 'agt_3' }).expect(404)
     })
@@ -81,16 +92,23 @@ describe('POST /api/shifts/:shiftId/assignments', () => {
     })
 
     it('should return 422 when the agent qualification has expired', async () => {
+        const before = await readFile(databasePath, 'utf8')
+
         await createAssignment('shf_1', { agentId: 'agt_2' }).expect(422)
+
+        expect(await readFile(databasePath, 'utf8')).toBe(before)
     })
 
     it('should return 422 when the agent is booked on an overlapping shift', async () => {
         await createAssignment('shf_2', { agentId: 'agt_1' }).expect(422)
     })
 
-    it('should return 409 when the shift is full', async () => {
+    it('should return 409 when the shift is full and write nothing', async () => {
         await createAssignment('shf_1', { agentId: 'agt_3' }).expect(201)
+        const afterBooking = await readFile(databasePath, 'utf8')
 
         await createAssignment('shf_1', { agentId: 'agt_4' }).expect(409)
+
+        expect(await readFile(databasePath, 'utf8')).toBe(afterBooking)
     })
 })
