@@ -1,39 +1,13 @@
 import { describe, expect, it } from 'vitest'
+import { InMemoryAgentRepository } from '../../infrastructure/shift/in-memory-agent.repository'
+import { InMemoryAssignmentRepository } from '../../infrastructure/shift/in-memory-assignment.repository'
+import { InMemoryShiftRepository } from '../../infrastructure/shift/in-memory-shift.repository'
 import { ShiftAvailabilityService } from './availability.service'
 import type { Agent } from './models/agent.model'
 import type { Assignment } from './models/assignment.model'
 import type { Qualification } from './models/qualification.model'
 import type { Shift } from './models/shift.model'
-import type { AgentRepository, AssignmentRepository, ShiftRepository } from './ports'
 import { ShiftNotFoundError } from './shift-not-found.error'
-
-class InMemoryShiftRepository implements ShiftRepository {
-    constructor(private readonly shifts: Shift[]) {}
-
-    async findById(shiftId: string): Promise<Shift | undefined> {
-        return this.shifts.find(shift => shift.id === shiftId)
-    }
-
-    async findByIds(shiftIds: string[]): Promise<Shift[]> {
-        return this.shifts.filter(shift => shiftIds.includes(shift.id))
-    }
-}
-
-class InMemoryAgentRepository implements AgentRepository {
-    constructor(private readonly agents: Agent[]) {}
-
-    async findByQualificationCodes(codes: string[]): Promise<Agent[]> {
-        return this.agents.filter(agent => agent.qualifications.some(qualification => codes.includes(qualification.code)))
-    }
-}
-
-class InMemoryAssignmentRepository implements AssignmentRepository {
-    constructor(private readonly assignments: Assignment[]) {}
-
-    async findByAgentIds(agentIds: string[]): Promise<Assignment[]> {
-        return this.assignments.filter(assignment => agentIds.includes(assignment.agentId))
-    }
-}
 
 function agent(id: string, qualifications: Qualification[]): Agent {
     return { id, name: id, qualifications }
