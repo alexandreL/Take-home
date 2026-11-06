@@ -5,8 +5,9 @@ import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { AppModule } from '../src/app.module.js'
 
-interface AvailableAgentsBody {
-    agents: { id: string; name: string; qualifications: { code: string; expiresOn: string }[] }[]
+interface AvailableAgent {
+    id: string
+    name: string
 }
 
 // Jordan also holds CROWD_CONTROL in the fixture, so that on shf_2 the only
@@ -26,65 +27,45 @@ describe('GET /api/shifts/:shiftId/available-agents', () => {
 
     afterAll(async () => {
         await app.close()
-        process.env.DATABASE_PATH = undefined
+        delete process.env.DATABASE_PATH
     })
 
-    async function getAvailableAgents(shiftId: string): Promise<AvailableAgentsBody> {
+    async function getAvailableAgents(shiftId: string): Promise<AvailableAgent[]> {
         const response = await request(app.getHttpServer()).get(`/api/shifts/${shiftId}/available-agents`).expect(200)
 
-        return response.body as AvailableAgentsBody
-    }
-
-    function ids(body: AvailableAgentsBody): string[] {
-        return body.agents.map(agent => agent.id)
+        return response.body as AvailableAgent[]
     }
 
     it('should return only Marc for shf_1', async () => {
-        const body = await getAvailableAgents('shf_1')
+        const agents = await getAvailableAgents('shf_1')
 
-        expect(body).toEqual({
-            agents: [
-                {
-                    id: 'agt_3',
-                    name: 'Marc Tremblay',
-                    qualifications: [
-                        { code: 'GUARD_LICENSE', expiresOn: '2028-01-15' },
-                        { code: 'CROWD_CONTROL', expiresOn: '2027-06-30' },
-                    ],
-                },
-            ],
-        })
+        expect(agents).toEqual([{ id: 'agt_3', name: 'Marc Tremblay' }])
     })
 
     it('should return only Marc for shf_2', async () => {
-        const body = await getAvailableAgents('shf_2')
+        const agents = await getAvailableAgents('shf_2')
 
-        expect(body).toEqual({
-            agents: [
-                {
-                    id: 'agt_3',
-                    name: 'Marc Tremblay',
-                    qualifications: [
-                        { code: 'GUARD_LICENSE', expiresOn: '2028-01-15' },
-                        { code: 'CROWD_CONTROL', expiresOn: '2027-06-30' },
-                    ],
-                },
-            ],
-        })
+        expect(agents).toEqual([{ id: 'agt_3', name: 'Marc Tremblay' }])
     })
 
     it('should exclude an agent whose required qualification has expired', async () => {
-        const body = await getAvailableAgents('shf_1')
+        const agents = await getAvailableAgents('shf_1')
 
-        // Priya's GUARD_LICENSE expired on 2026-08-31, before the shift ends.
-        expect(ids(body)).not.toContain('agt_2')
+        // Priya's GUARD_LICENSE expired on 2026-08-31, before the shift starts.
+        expect(agents.map(agent => agent.id)).not.toContain('agt_2')
     })
 
     it('should exclude an agent booked on an overlapping shift', async () => {
-        const body = await getAvailableAgents('shf_2')
+        const agents = await getAvailableAgents('shf_2')
 
         // Jordan is assigned to shf_1, whose 22:00-06:00 window overlaps shf_2.
-        expect(ids(body)).not.toContain('agt_1')
+        expect(agents.map(agent => agent.id)).not.toContain('agt_1')
+    })
+
+    it('should return an empty array when nobody is available', async () => {
+        const agents = await getAvailableAgents('shf_3')
+
+        expect(agents).toEqual([])
     })
 
     it('should return 404 when the shift does not exist', async () => {
