@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
-import type { Shift } from '../../domain/shift/models/shift.model.js'
-import type { ShiftRepository } from '../../domain/shift/ports.js'
-import { JsonDatabase } from './json-database.js'
+import type { Shift } from '../../domain/shift/models/shift.model'
+import type { ShiftRepository } from '../../domain/shift/ports'
+import { JsonDatabase } from './json-database'
 
 @Injectable()
 export class JsonShiftRepository implements ShiftRepository {

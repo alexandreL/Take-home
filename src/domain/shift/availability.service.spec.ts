@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { ShiftAvailabilityService } from './availability.service.js'
-import type { Agent } from './models/agent.model.js'
-import type { Assignment } from './models/assignment.model.js'
-import type { Qualification } from './models/qualification.model.js'
-import type { Shift } from './models/shift.model.js'
-import type { AgentRepository, AssignmentRepository, ShiftRepository } from './ports.js'
-import { ShiftNotFoundError } from './shift-not-found.error.js'
+import { ShiftAvailabilityService } from './availability.service'
+import type { Agent } from './models/agent.model'
+import type { Assignment } from './models/assignment.model'
+import type { Qualification } from './models/qualification.model'
+import type { Shift } from './models/shift.model'
+import type { AgentRepository, AssignmentRepository, ShiftRepository } from './ports'
+import { ShiftNotFoundError } from './shift-not-found.error'
 
 class InMemoryShiftRepository implements ShiftRepository {
     constructor(private readonly shifts: Shift[]) {}

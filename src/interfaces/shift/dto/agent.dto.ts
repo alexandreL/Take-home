@@ -1,4 +1,4 @@
-import type { QualificationDto } from './qualification.dto.js'
+import type { QualificationDto } from './qualification.dto'
 
 /** An agent as exposed by the HTTP API. */
 export interface AgentDto {

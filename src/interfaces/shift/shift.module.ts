@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common'
-import { ShiftAvailabilityService } from '../../domain/shift/availability.service.js'
-import { JsonAgentRepository } from '../../infrastructure/shift/json-agent.repository.js'
-import { JsonAssignmentRepository } from '../../infrastructure/shift/json-assignment.repository.js'
-import { JsonDatabase } from '../../infrastructure/shift/json-database.js'
-import { JsonShiftRepository } from '../../infrastructure/shift/json-shift.repository.js'
-import { ShiftController } from './shift.controller.js'
+import { ShiftAvailabilityService } from '../../domain/shift/availability.service'
+import { JsonAgentRepository } from '../../infrastructure/shift/json-agent.repository'
+import { JsonAssignmentRepository } from '../../infrastructure/shift/json-assignment.repository'
+import { JsonDatabase } from '../../infrastructure/shift/json-database'
+import { JsonShiftRepository } from '../../infrastructure/shift/json-shift.repository'
+import { ShiftController } from './shift.controller'
 
 @Module({
     controllers: [ShiftController],

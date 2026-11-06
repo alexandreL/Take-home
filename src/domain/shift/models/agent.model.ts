@@ -1,4 +1,4 @@
-import type { Qualification } from './qualification.model.js'
+import type { Qualification } from './qualification.model'
 
 export interface Agent {
     id: string

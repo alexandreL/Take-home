@@ -1,6 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common'
 import type { Response } from 'express'
-import { ShiftNotFoundError } from '../../domain/shift/shift-not-found.error.js'
+import { ShiftNotFoundError } from '../../domain/shift/shift-not-found.error'
 
 /** Translates the domain error into HTTP: a missing shift is a 404. */
 @Catch(ShiftNotFoundError)

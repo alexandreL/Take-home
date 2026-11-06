@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
-import type { Agent } from '../../domain/shift/models/agent.model.js'
-import type { AgentRepository } from '../../domain/shift/ports.js'
-import { JsonDatabase } from './json-database.js'
+import type { Agent } from '../../domain/shift/models/agent.model'
+import type { AgentRepository } from '../../domain/shift/ports'
+import { JsonDatabase } from './json-database'
 
 @Injectable()
 export class JsonAgentRepository implements AgentRepository {

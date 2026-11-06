@@ -1,7 +1,7 @@
-import type { Agent } from './models/agent.model.js'
-import type { Assignment } from './models/assignment.model.js'
-import type { Qualification } from './models/qualification.model.js'
-import type { Shift } from './models/shift.model.js'
+import type { Agent } from './models/agent.model'
+import type { Assignment } from './models/assignment.model'
+import type { Qualification } from './models/qualification.model'
+import type { Shift } from './models/shift.model'
 
 const ONE_MILLISECOND = 1
 

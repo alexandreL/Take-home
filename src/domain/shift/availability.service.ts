@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { JsonAgentRepository } from '../../infrastructure/shift/json-agent.repository.js'
-import { JsonAssignmentRepository } from '../../infrastructure/shift/json-assignment.repository.js'
-import { JsonShiftRepository } from '../../infrastructure/shift/json-shift.repository.js'
-import { availableAgents } from './availability.js'
-import type { Agent } from './models/agent.model.js'
-import type { AgentRepository, AssignmentRepository, ShiftRepository } from './ports.js'
-import { ShiftNotFoundError } from './shift-not-found.error.js'
+import { JsonAgentRepository } from '../../infrastructure/shift/json-agent.repository'
+import { JsonAssignmentRepository } from '../../infrastructure/shift/json-assignment.repository'
+import { JsonShiftRepository } from '../../infrastructure/shift/json-shift.repository'
+import { availableAgents } from './availability'
+import type { Agent } from './models/agent.model'
+import type { AgentRepository, AssignmentRepository, ShiftRepository } from './ports'
+import { ShiftNotFoundError } from './shift-not-found.error'
 
 /**
  * Lists the agents who can work a given shift.

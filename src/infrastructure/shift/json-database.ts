@@ -1,8 +1,8 @@
 import { readFile } from 'node:fs/promises'
 import { Injectable } from '@nestjs/common'
-import type { Agent } from '../../domain/shift/models/agent.model.js'
-import type { Assignment } from '../../domain/shift/models/assignment.model.js'
-import type { Shift } from '../../domain/shift/models/shift.model.js'
+import type { Agent } from '../../domain/shift/models/agent.model'
+import type { Assignment } from '../../domain/shift/models/assignment.model'
+import type { Shift } from '../../domain/shift/models/shift.model'
 
 export interface DatabaseSnapshot {
     agents: Agent[]
