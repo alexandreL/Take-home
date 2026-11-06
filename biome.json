@@ -42,6 +42,6 @@
     },
     "files": {
         "ignoreUnknown": false,
-        "includes": ["**", "!**/dist", "!**/coverage", "!**/node_modules", "!**/*.d.ts", "!**/*.tsbuildinfo"]
+        "includes": ["**", "!**/dist", "!**/coverage", "!**/node_modules", "!**/database", "!**/*.d.ts", "!**/*.tsbuildinfo"]
     }
 }

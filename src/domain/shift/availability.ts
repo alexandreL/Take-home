@@ -64,6 +64,11 @@ export function availableAgents(agents: Agent[], shift: Shift, assignments: Assi
     return agents.filter(agent => meetsRequirements(agent, shift) && !isDoubleBooked(agent.id, shift, assignments, shifts))
 }
 
+/** Unique shift ids referenced by the given assignments, in first-seen order. */
+export function uniqueShiftIds(assignments: Assignment[]): string[] {
+    return [...new Set(assignments.map(assignment => assignment.shiftId))]
+}
+
 function utcCalendarDay(date: Date): string {
     const year = date.getUTCFullYear()
     const month = String(date.getUTCMonth() + 1).padStart(2, '0')

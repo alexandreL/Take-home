@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common'
+import { AssignmentService } from '../../domain/shift/assignment.service'
 import { ShiftAvailabilityService } from '../../domain/shift/availability.service'
 import { JsonAgentRepository } from '../../infrastructure/shift/json-agent.repository'
 import { JsonAssignmentRepository } from '../../infrastructure/shift/json-assignment.repository'
@@ -14,6 +15,7 @@ import { ShiftController } from './shift.controller'
         JsonAgentRepository,
         JsonAssignmentRepository,
         ShiftAvailabilityService,
+        AssignmentService,
     ],
 })
 export class ShiftModule {}

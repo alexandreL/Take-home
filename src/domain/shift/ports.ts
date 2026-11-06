@@ -3,10 +3,10 @@ import type { Assignment } from './models/assignment.model'
 import type { Shift } from './models/shift.model'
 
 /**
- * Read ports used by the availability service. Declared in the domain, implemented
- * by the infrastructure (the JSON file today, a real database later).
+ * Read and write ports used by the shift services. Declared in the domain,
+ * implemented by the infrastructure (the JSON file today, a real database later).
  *
- * All reads are batched: the service fetches a whole set in one call rather than
+ * Reads are batched: the services fetch a whole set in one call rather than
  * looping over agents.
  */
 export interface ShiftRepository {
@@ -15,9 +15,17 @@ export interface ShiftRepository {
 }
 
 export interface AgentRepository {
+    findById(agentId: string): Promise<Agent | undefined>
     findByQualificationCodes(codes: string[]): Promise<Agent[]>
+}
+
+export interface CreateAssignmentInput {
+    shiftId: string
+    agentId: string
 }
 
 export interface AssignmentRepository {
     findByAgentIds(agentIds: string[]): Promise<Assignment[]>
+    findByShiftId(shiftId: string): Promise<Assignment[]>
+    create(input: CreateAssignmentInput): Promise<Assignment>
 }
